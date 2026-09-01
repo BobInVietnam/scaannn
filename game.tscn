@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://d35ghuj1k8l57"]
+
+[ext_resource type="PackedScene" uid="uid://c8hocool3615t" path="res://scenes/scaannn_gameplay.tscn" id="1_80nbo"]
+
+[node name="Game" type="Node2D" unique_id=1023739764]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=598917919]
+anchor_mode = 0
+
+[node name="Gameplay" parent="." unique_id=277205528 instance=ExtResource("1_80nbo")]

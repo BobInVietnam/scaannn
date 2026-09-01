@@ -1,0 +1,68 @@
+[gd_scene format=3 uid="uid://b54vom07obqgc"]
+
+[ext_resource type="Texture2D" uid="uid://lko8p7bkqa0v" path="res://assets/scaannn.png" id="1_kfrfi"]
+[ext_resource type="Script" uid="uid://ba6hqwhwqdm03" path="res://entities/item_behavior.gd" id="1_n1270"]
+[ext_resource type="Shader" uid="uid://0fmaqtm1hu0a" path="res://entities/item.gdshader" id="2_bn1uh"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uir1o"]
+resource_local_to_scene = true
+shader = ExtResource("2_bn1uh")
+shader_parameter/flash_modifier = 0.0
+shader_parameter/flash_color = Color(1, 1, 1, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n1270"]
+atlas = ExtResource("1_kfrfi")
+region = Rect2(256, 6, 64, 53)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bn1uh"]
+atlas = ExtResource("1_kfrfi")
+region = Rect2(0, 0, 54, 63)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_t2sw1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n1270")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bn1uh")
+}],
+"loop": 1,
+"name": &"picked_up",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t2sw1"]
+size = Vector2(22, 8)
+
+[node name="ItemChips" type="Node2D" unique_id=834402955]
+script = ExtResource("1_n1270")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1861384126]
+material = SubResource("ShaderMaterial_uir1o")
+sprite_frames = SubResource("SpriteFrames_t2sw1")
+animation = &"picked_up"
+
+[node name="ScanHitbox" type="Area2D" parent="." unique_id=1271103808]
+position = Vector2(-9, 21)
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ScanHitbox" unique_id=970145879]
+shape = SubResource("RectangleShape2D_t2sw1")
+
+[node name="PickUpHitbox" type="Area2D" parent="." unique_id=1031112748]
+collision_layer = 0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="PickUpHitbox" unique_id=347738029]
+polygon = PackedVector2Array(-32, -17, -9, -26, 15, -23, 32, 13, 15, 23, -10, 26, -24, 6)
+
+[connection signal="area_entered" from="ScanHitbox" to="." method="_on_scan_hitbox_area_entered"]
+[connection signal="area_exited" from="ScanHitbox" to="." method="_on_scan_hitbox_area_exited"]
+[connection signal="area_entered" from="PickUpHitbox" to="." method="_on_pick_up_hitbox_area_entered"]
+[connection signal="area_exited" from="PickUpHitbox" to="." method="_on_pick_up_hitbox_area_exited"]

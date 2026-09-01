@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://c8hocool3615t"]
+
+[ext_resource type="Script" uid="uid://b52k1m5kc8mxd" path="res://scenes/scaannn_gameplay.gd" id="1_jirow"]
+[ext_resource type="PackedScene" uid="uid://ce3rchmh0ijoa" path="res://hud/countertop.tscn" id="2_7xno6"]
+[ext_resource type="PackedScene" uid="uid://bj05krn4jv8mj" path="res://hands/scan_hand.tscn" id="2_kyrdu"]
+[ext_resource type="PackedScene" uid="uid://x15wry7uosu" path="res://hands/grab_hand.tscn" id="3_7xno6"]
+[ext_resource type="PackedScene" uid="uid://b54vom07obqgc" path="res://entities/item_chips.tscn" id="3_ya46o"]
+
+[node name="Game" type="Node2D" unique_id=277205528]
+script = ExtResource("1_jirow")
+
+[node name="Background" type="Sprite2D" parent="." unique_id=1305722624]
+
+[node name="Countertop" parent="." unique_id=1873961706 instance=ExtResource("2_7xno6")]
+position = Vector2(576, 440)
+
+[node name="Node" type="Node2D" parent="." unique_id=1394078180]
+z_index = 10
+
+[node name="ItemChips" parent="Node" unique_id=834402955 instance=ExtResource("3_ya46o")]
+position = Vector2(896, 480)
+scale = Vector2(3, 3)
+
+[node name="ItemChips2" parent="Node" unique_id=1004968408 instance=ExtResource("3_ya46o")]
+position = Vector2(832.00006, 504)
+scale = Vector2(3, 3)
+
+[node name="ItemChips3" parent="Node" unique_id=863620001 instance=ExtResource("3_ya46o")]
+position = Vector2(752.00006, 440)
+scale = Vector2(3, 3)
+
+[node name="GrabHand" parent="." unique_id=80531346 instance=ExtResource("3_7xno6")]
+z_index = 999
+position = Vector2(268, 439)
+scale = Vector2(3, 3)
+
+[node name="ScanHand" parent="." unique_id=757804610 instance=ExtResource("2_kyrdu")]
+z_index = 1000
+position = Vector2(1032, 440.00003)
+scale = Vector2(3, 3)
+
+[node name="ScanTimer" type="Timer" parent="." unique_id=461584085]
+
+[connection signal="grab" from="." to="Node/ItemChips" method="_on_game_grab"]
+[connection signal="scan_successfully" from="." to="ScanHand" method="_on_game_scan_successfully"]
+[connection signal="obstruction" from="GrabHand" to="." method="_on_grab_hand_obstruction"]
+[connection signal="timeout" from="ScanTimer" to="." method="_on_scan_timer_timeout"]

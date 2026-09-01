@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://ce3rchmh0ijoa"]
+
+[ext_resource type="Script" uid="uid://cygwupqel27kb" path="res://hud/countertop.gd" id="1_dc8bt"]
+[ext_resource type="Texture2D" uid="uid://lko8p7bkqa0v" path="res://assets/scaannn.png" id="1_mdgc1"]
+[ext_resource type="FontFile" uid="uid://has7uvkifb4v" path="res://assets/dearpix-2-01.ttf" id="2_ko3t6"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t2sw1"]
+atlas = ExtResource("1_mdgc1")
+region = Rect2(0, 331, 323, 182)
+
+[sub_resource type="LabelSettings" id="LabelSettings_57k3a"]
+font = ExtResource("2_ko3t6")
+
+[sub_resource type="LabelSettings" id="LabelSettings_dc8bt"]
+font = ExtResource("2_ko3t6")
+
+[sub_resource type="LabelSettings" id="LabelSettings_t2sw1"]
+font = ExtResource("2_ko3t6")
+font_size = 22
+
+[node name="Countertop" type="Node2D" unique_id=1873961706]
+script = ExtResource("1_dc8bt")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=617302813]
+scale = Vector2(3.4, 3.4)
+texture = SubResource("AtlasTexture_t2sw1")
+
+[node name="ItemScannedLabel" type="Label" parent="." unique_id=938676265]
+offset_left = -120.0
+offset_top = -240.0
+offset_bottom = -144.0
+text = "Bún bò huế huế huế 
+Alo
+Alo
+Alo aaaaaa aaa aaaâ aaa 
+Alo"
+label_settings = SubResource("LabelSettings_57k3a")
+clip_text = true
+text_overrun_behavior = 1
+max_lines_visible = 5
+
+[node name="PriceLabel" type="Label" parent="." unique_id=212472440]
+offset_left = 8.0
+offset_top = -240.0
+offset_right = 56.0
+offset_bottom = -144.0
+text = "100 Đ
+12345 Đ
+1000 Đ
+99999 Đ
+"
+label_settings = SubResource("LabelSettings_dc8bt")
+horizontal_alignment = 2
+
+[node name="TotalLabel" type="Label" parent="." unique_id=1697558258]
+offset_left = -120.0
+offset_top = -136.0
+offset_right = 56.0
+offset_bottom = -112.0
+text = "T. cộng: 10000000 Đ "
+label_settings = SubResource("LabelSettings_t2sw1")
+clip_text = true
+text_overrun_behavior = 1

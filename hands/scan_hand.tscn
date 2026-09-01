@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://bj05krn4jv8mj"]
+
+[ext_resource type="Script" uid="uid://culp3pwy7t5i" path="res://hands/scan_hand.gd" id="1_ekhc8"]
+[ext_resource type="Texture2D" uid="uid://lko8p7bkqa0v" path="res://assets/scaannn.png" id="1_vy2iu"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t2sw1"]
+size = Vector2(2, 2)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ekhc8"]
+atlas = ExtResource("1_vy2iu")
+region = Rect2(221, 0, 35, 52)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c2qyp"]
+atlas = ExtResource("1_vy2iu")
+region = Rect2(185, 0, 35, 52)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s8wpm"]
+atlas = ExtResource("1_vy2iu")
+region = Rect2(221, 52, 35, 52)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_57k3a"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ekhc8")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c2qyp")
+}],
+"loop": 1,
+"name": &"scan_ok",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s8wpm")
+}],
+"loop": 1,
+"name": &"scanning",
+"speed": 5.0
+}]
+
+[node name="ScanHand" type="Area2D" unique_id=757804610]
+collision_layer = 2
+collision_mask = 2
+script = ExtResource("1_ekhc8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1496558079]
+position = Vector2(-18, -14)
+shape = SubResource("RectangleShape2D_t2sw1")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=104100251]
+sprite_frames = SubResource("SpriteFrames_57k3a")
+animation = &"scanning"
+
+[node name="ScanOkTimer" type="Timer" parent="." unique_id=762153267]
+wait_time = 0.2
+
+[connection signal="timeout" from="ScanOkTimer" to="." method="_on_scan_ok_timer_timeout"]

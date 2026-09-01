@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://x15wry7uosu"]
+
+[ext_resource type="Script" uid="uid://dlh2ivpybm7vr" path="res://hands/grab_hand.gd" id="1_g5rr2"]
+[ext_resource type="Texture2D" uid="uid://lko8p7bkqa0v" path="res://assets/scaannn.png" id="1_l6bd0"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tbvys"]
+atlas = ExtResource("1_l6bd0")
+region = Rect2(46, 64, 46, 34)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mnhkc"]
+atlas = ExtResource("1_l6bd0")
+region = Rect2(0, 64, 46, 34)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_t2sw1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tbvys")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mnhkc")
+}],
+"loop": 1,
+"name": &"grab_empty",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_8jejn"]
+radius = 14.008925
+
+[node name="GrabHand" type="Node2D" unique_id=309684549]
+script = ExtResource("1_g5rr2")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1053095313]
+sprite_frames = SubResource("SpriteFrames_t2sw1")
+animation = &"grab_empty"
+
+[node name="PickUpHitbox" type="Area2D" parent="." unique_id=1782516521]
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PickUpHitbox" unique_id=1150487266]
+position = Vector2(5, -2.5)
+shape = SubResource("CircleShape2D_8jejn")
+
+[node name="CoveringHitbox" type="Area2D" parent="." unique_id=2107832045]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="CoveringHitbox" unique_id=1873275320]
+polygon = PackedVector2Array(0, -11, -16, -6, -21, 3, -7, 16, 7, 11, 17, 1, 11, -8)
+
+[connection signal="area_entered" from="CoveringHitbox" to="." method="_on_covering_hitbox_area_entered"]
+[connection signal="area_exited" from="CoveringHitbox" to="." method="_on_covering_hitbox_area_exited"]
