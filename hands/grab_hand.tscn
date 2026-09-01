@@ -41,7 +41,6 @@ sprite_frames = SubResource("SpriteFrames_t2sw1")
 animation = &"grab_empty"
 
 [node name="PickUpHitbox" type="Area2D" parent="." unique_id=1782516521]
-collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PickUpHitbox" unique_id=1150487266]
 position = Vector2(5, -2.5)

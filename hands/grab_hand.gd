@@ -1,7 +1,9 @@
 extends Node2D
+class_name GrabbingHand
 
 @onready var animation: AnimatedSprite2D = $AnimatedSprite2D
 @onready var covering_hitbox: Area2D = $CoveringHitbox
+@onready var pickup_hitbox: Area2D = $PickUpHitbox
 
 signal obstruction(obstructed: bool)
 

@@ -57,7 +57,7 @@ collision_mask = 2
 shape = SubResource("RectangleShape2D_t2sw1")
 
 [node name="PickUpHitbox" type="Area2D" parent="." unique_id=1031112748]
-collision_layer = 0
+collision_mask = 0
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="PickUpHitbox" unique_id=347738029]
 polygon = PackedVector2Array(-32, -17, -9, -26, 15, -23, 32, 13, 15, 23, -10, 26, -24, 6)

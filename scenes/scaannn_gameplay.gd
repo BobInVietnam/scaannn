@@ -20,6 +20,7 @@ var scanned_item_list : Array[Item] = []
 
 var obstructed = false;
 var scanning_barcode = false;
+var scan_success_pause = false;
 
 signal scan_successfully()
 signal update_item_list(scanned_item_list: Array[Item])
@@ -29,6 +30,7 @@ func _ready() -> void:
 	for item in item_list_node.get_children():
 		if item is Item:
 			item_list.append(item)
+	item_list.reverse()
 			
 	if left_handed :
 		left_hand = scan_hand
@@ -46,20 +48,41 @@ func _input(event):
 					print("Grabbed ", item.to_string())
 					item.pick_up()
 					picked_item = item
+					picked_item.move_to_front()
 					item_list.erase(item)
+					grab_hand.pickup_hitbox.monitoring = false
+					if grab_hand.covering_hitbox.overlaps_area(item.scan_hitbox):
+						print("Obstructed!")
+						obstructed = true;
 					break
 	if event.is_action_released("grab"):
 		print("Released")
 		if picked_item != null:
 			picked_item.drop()
-			item_list.append(picked_item)
+			item_list.push_front(picked_item)
 			picked_item = null
+			grab_hand.pickup_hitbox.monitoring = true
+			obstructed = false;
+	if event.is_action_released("scan"):
+		scan_success_pause = false
 		
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	scanning_barcode = false;
 	
+	# ITEM LIST GRABABILITY PROCESSOR (probably a performance chokepoint)
+	for i in item_list.size():
+		if grab_hand.pickup_hitbox.overlaps_area(item_list[i].pickup_hitbox):
+			print(item_list[i].to_string(), " is grabable")
+			item_list[i].grabable = true
+			for j in range(i + 1, item_list.size()):
+				item_list[j].grabable = false
+			break
+		else:
+			item_list[i].grabable = false
+	
+	# INPUT PROCESSING SECTION
 	right_hand.position = get_local_mouse_position()
 	if Input.is_action_pressed("move_up"):
 		left_hand.position.y -= move_velocity
@@ -78,13 +101,14 @@ func _process(delta: float) -> void:
 		if picked_item != null:
 			picked_item.position.x += move_velocity
 	if Input.is_action_pressed("scan"):
-		if picked_item != null and picked_item.scanable and !obstructed:
+		if picked_item != null and picked_item.scanable and !obstructed and !scan_success_pause:
 			scanning_barcode = true
 	
 	left_hand.position = left_hand.position.clamp(Vector2.ZERO, get_viewport_rect().size)
 	if picked_item != null:
 		picked_item.position = picked_item.position.clamp(Vector2.ZERO, get_viewport_rect().size)
 	
+	# SCANNING LOGIC
 	if scanning_barcode:
 		if scan_timer.is_stopped():
 			scan_timer.start(randf_range(min_time_to_scan, max_time_to_scan))
@@ -97,3 +121,4 @@ func _on_scan_timer_timeout() -> void:
 	scan_successfully.emit()
 	update_item_list.emit(scanned_item_list)
 	scan_timer.stop()
+	scan_success_pause = true

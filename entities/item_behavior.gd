@@ -5,6 +5,7 @@ const MAX_HEIGHT = 50;
 
 @onready var animation:= $AnimatedSprite2D
 @onready var scan_hitbox:= $ScanHitbox
+@onready var pickup_hitbox:= $PickUpHitbox
 
 var grabable = false;
 var scanable = false;
@@ -30,10 +31,14 @@ func _process(delta: float) -> void:
 	position += velocity;
 	current_height -= velocity.y
 	
+	# TEXTURE PROCESSING
 	if picked_up:
 		animation.play("picked_up")
 	else:
 		animation.play("default")
+		
+	_setShader(true) if grabable else _setShader(false)
+		
 		
 func pick_up() -> void:
 	picked_up = true;
@@ -50,19 +55,19 @@ func _setShader(isOn: bool):
 	if shader_material:
 		shader_material.set_shader_parameter("flash_modifier", 0.3 if isOn else 0.0)
 
-func _on_pick_up_hitbox_area_entered(area: Area2D) -> void:
-	print("Item pickable")
-	grabable = true;
-	if !picked_up:
-		_setShader(true)
-	else:
-		_setShader(false)
-
-func _on_pick_up_hitbox_area_exited(area: Area2D) -> void:
-	print("Item not pickable")
-	grabable = false;
-	_setShader(false)
-	
+#func _on_pick_up_hitbox_area_entered(area: Area2D) -> void:
+	#print("Item pickable")
+	#grabable = true;
+	#if !picked_up:
+		#_setShader(true)
+	#else:
+		#_setShader(false)
+#
+#func _on_pick_up_hitbox_area_exited(area: Area2D) -> void:
+	#print("Item not pickable")
+	#grabable = false;
+	#_setShader(false)
+	#
 func _on_scan_hitbox_area_entered(area: Area2D) -> void:
 	print("Scanable")
 	scanable = true;
