@@ -41,7 +41,6 @@ scale = Vector2(3, 3)
 
 [node name="ScanTimer" type="Timer" parent="." unique_id=461584085]
 
-[connection signal="grab" from="." to="Node/ItemChips" method="_on_game_grab"]
 [connection signal="scan_successfully" from="." to="ScanHand" method="_on_game_scan_successfully"]
-[connection signal="obstruction" from="GrabHand" to="." method="_on_grab_hand_obstruction"]
+[connection signal="update_item_list" from="." to="Countertop" method="_on_game_update_item_list"]
 [connection signal="timeout" from="ScanTimer" to="." method="_on_scan_timer_timeout"]

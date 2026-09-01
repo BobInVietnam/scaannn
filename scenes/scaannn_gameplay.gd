@@ -13,17 +13,16 @@ extends Node2D
 var left_hand : Node2D;
 var right_hand : Node2D;
 
-var item_list : Array[Item]
+var item_list : Array[Item] = []
 var picked_item : Item = null
 
-var scanned_item_list : Array[Item]
+var scanned_item_list : Array[Item] = []
 
 var obstructed = false;
 var scanning_barcode = false;
 
-signal grab
-signal release
-signal scan_successfully
+signal scan_successfully()
+signal update_item_list(scanned_item_list: Array[Item])
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -79,7 +78,7 @@ func _process(delta: float) -> void:
 		if picked_item != null:
 			picked_item.position.x += move_velocity
 	if Input.is_action_pressed("scan"):
-		if picked_item != null and picked_item.scanable:
+		if picked_item != null and picked_item.scanable and !obstructed:
 			scanning_barcode = true
 	
 	left_hand.position = left_hand.position.clamp(Vector2.ZERO, get_viewport_rect().size)
@@ -94,5 +93,7 @@ func _process(delta: float) -> void:
 
 func _on_scan_timer_timeout() -> void:
 	print("Scan done: item ", picked_item)
+	scanned_item_list.append(picked_item)
 	scan_successfully.emit()
+	update_item_list.emit(scanned_item_list)
 	scan_timer.stop()
