@@ -3,12 +3,16 @@ extends Node2D
 @onready var scan_hand:= $ScanHand
 @onready var grab_hand:= $GrabHand
 @onready var scan_timer:= $ScanTimer
+@onready var spawn_timer:= $SpawnTimer
 @onready var item_list_node:= $Node
 
-@export var move_velocity: int = 30;
+@export var x_move_velocity: int = 30;
+@export var y_move_velocity: int = 15;
 @export var min_time_to_scan: float = 0.2;
 @export var max_time_to_scan: float = 0.6;
 @export var left_handed: bool = false;
+
+@export var item_category: Array[PackedScene]
 
 var left_hand : Node2D;
 var right_hand : Node2D;
@@ -27,10 +31,17 @@ signal update_item_list(scanned_item_list: Array[Item])
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	for item in item_category:
+		var new_item: Node2D = item.instantiate()
+		new_item.scale = Vector2(3, 3)
+		item_list_node.add_child(new_item)
+
 	for item in item_list_node.get_children():
 		if item is Item:
 			item_list.append(item)
 	item_list.reverse()
+	
+	spawn_timer.start(5)
 			
 	if left_handed :
 		left_hand = scan_hand
@@ -65,6 +76,15 @@ func _input(event):
 			obstructed = false;
 	if event.is_action_released("scan"):
 		scan_success_pause = false
+	if event.is_action_pressed("confirm_order"):
+		print("CLEARED ITEMS\n---------------")
+		for item in scanned_item_list:
+			item_list.erase(item)
+			print(item.to_string())
+			item.queue_free()
+		print("---------------")
+		scanned_item_list.clear()
+		update_item_list.emit(scanned_item_list)
 		
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -84,29 +104,26 @@ func _process(delta: float) -> void:
 	
 	# INPUT PROCESSING SECTION
 	right_hand.position = get_local_mouse_position()
+	
+	var velocity = Vector2(0, 0)
+	var lhp = left_hand.position
+	var viewport_size = get_viewport_rect().size
 	if Input.is_action_pressed("move_up"):
-		left_hand.position.y -= move_velocity
-		if picked_item != null:
-			picked_item.position.y -= move_velocity
+		velocity.y -= y_move_velocity if lhp.y - y_move_velocity >= 0 else lhp.y
 	if Input.is_action_pressed("move_down"):
-		left_hand.position.y += move_velocity
-		if picked_item != null:
-			picked_item.position.y += move_velocity
+		velocity.y += y_move_velocity if lhp.y + y_move_velocity <= viewport_size.y else viewport_size.y - lhp.y 
 	if Input.is_action_pressed("move_left"):
-		left_hand.position.x -= move_velocity
-		if picked_item != null:
-			picked_item.position.x -= move_velocity
+		velocity.x -= x_move_velocity if lhp.x - x_move_velocity >= 0 else lhp.x
 	if Input.is_action_pressed("move_right"):
-		left_hand.position.x += move_velocity
-		if picked_item != null:
-			picked_item.position.x += move_velocity
+		velocity.x += x_move_velocity if lhp.x + x_move_velocity <= viewport_size.x else viewport_size.x - lhp.x 
+
 	if Input.is_action_pressed("scan"):
 		if picked_item != null and picked_item.scanable and !obstructed and !scan_success_pause:
 			scanning_barcode = true
 	
-	left_hand.position = left_hand.position.clamp(Vector2.ZERO, get_viewport_rect().size)
+	left_hand.position += velocity
 	if picked_item != null:
-		picked_item.position = picked_item.position.clamp(Vector2.ZERO, get_viewport_rect().size)
+		picked_item.position += velocity
 	
 	# SCANNING LOGIC
 	if scanning_barcode:
@@ -122,3 +139,10 @@ func _on_scan_timer_timeout() -> void:
 	update_item_list.emit(scanned_item_list)
 	scan_timer.stop()
 	scan_success_pause = true
+
+func _on_spawn_timer_timeout() -> void:
+	var new_item: Node2D = item_category[randi_range(0, item_category.size() - 1)].instantiate()
+	new_item.scale = Vector2(3, 3)
+	item_list_node.add_child(new_item)
+	item_list.append(new_item)
+	print("added new item ", new_item.to_string())

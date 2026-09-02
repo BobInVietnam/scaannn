@@ -1,0 +1,74 @@
+[gd_scene format=3 uid="uid://rukuvjujny3j"]
+
+[ext_resource type="Script" uid="uid://ba6hqwhwqdm03" path="res://entities/item_behavior.gd" id="1_x41dp"]
+[ext_resource type="Shader" uid="uid://0fmaqtm1hu0a" path="res://entities/item.gdshader" id="2_sroa4"]
+[ext_resource type="Texture2D" uid="uid://lko8p7bkqa0v" path="res://assets/scaannn.png" id="3_3a8vy"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uir1o"]
+resource_local_to_scene = true
+shader = ExtResource("2_sroa4")
+shader_parameter/flash_modifier = 0.0
+shader_parameter/flash_color = Color(1, 1, 1, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x41dp"]
+atlas = ExtResource("3_3a8vy")
+region = Rect2(450, 3, 12, 47)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sroa4"]
+atlas = ExtResource("3_3a8vy")
+region = Rect2(108, 0, 18, 61)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_t2sw1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x41dp")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sroa4")
+}],
+"loop": 1,
+"name": &"picked_up",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t2sw1"]
+size = Vector2(10.75, 3.25)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_57k3a"]
+size = Vector2(12, 45)
+
+[node name="ItemBottle" type="Node2D" unique_id=834402955]
+script = ExtResource("1_x41dp")
+item_name = "placeholder_bottle"
+item_price = 100
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1861384126]
+material = SubResource("ShaderMaterial_uir1o")
+sprite_frames = SubResource("SpriteFrames_t2sw1")
+
+[node name="ScanHitbox" type="Area2D" parent="." unique_id=1271103808]
+position = Vector2(-9, 21)
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ScanHitbox" unique_id=970145879]
+position = Vector2(8.375, -15.625)
+shape = SubResource("RectangleShape2D_t2sw1")
+
+[node name="PickUpHitbox" type="Area2D" parent="." unique_id=1031112748]
+collision_mask = 0
+
+[node name="CollisionPolygon2D" type="CollisionShape2D" parent="PickUpHitbox" unique_id=1491518579]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_57k3a")
+
+[connection signal="area_entered" from="ScanHitbox" to="." method="_on_scan_hitbox_area_entered"]
+[connection signal="area_exited" from="ScanHitbox" to="." method="_on_scan_hitbox_area_exited"]
+[connection signal="area_entered" from="PickUpHitbox" to="." method="_on_pick_up_hitbox_area_entered"]
+[connection signal="area_exited" from="PickUpHitbox" to="." method="_on_pick_up_hitbox_area_exited"]
