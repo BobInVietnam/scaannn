@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://ccf3056e2pe2h"]
+
+[ext_resource type="Script" uid="uid://rpq0g4btulrk" path="res://entities/customer.gd" id="1_m0rfm"]
+[ext_resource type="Texture2D" uid="uid://lko8p7bkqa0v" path="res://assets/scaannn.png" id="2_v20gl"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t2sw1"]
+atlas = ExtResource("2_v20gl")
+region = Rect2(338, 282, 80, 230)
+
+[node name="CustomerTest" type="Node2D" unique_id=43196020]
+script = ExtResource("1_m0rfm")
+order = {
+"placeholder_book": 1,
+"placeholder_bottle": 1,
+"placeholder_lays": 2
+}
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=394927176]
+texture = SubResource("AtlasTexture_t2sw1")

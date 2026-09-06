@@ -7,17 +7,25 @@
 [ext_resource type="PackedScene" uid="uid://rukuvjujny3j" path="res://entities/item_bottle.tscn" id="3_ya46o"]
 [ext_resource type="PackedScene" uid="uid://k8k3ag17oofb" path="res://entities/item_book.tscn" id="4_e465i"]
 [ext_resource type="PackedScene" uid="uid://b54vom07obqgc" path="res://entities/item_chips.tscn" id="5_e465i"]
+[ext_resource type="PackedScene" uid="uid://80nasa5g6oex" path="res://entities/customer_line.tscn" id="5_lnqlt"]
 
 [node name="Game" type="Node2D" unique_id=277205528]
 script = ExtResource("1_jirow")
-item_category = Array[PackedScene]([ExtResource("4_e465i"), ExtResource("3_ya46o"), ExtResource("5_e465i")])
+item_category = {
+"placeholder_book": ExtResource("4_e465i"),
+"placeholder_bottle": ExtResource("3_ya46o"),
+"placeholder_lays": ExtResource("5_e465i")
+}
 
 [node name="Background" type="Sprite2D" parent="." unique_id=1305722624]
 
-[node name="Countertop" parent="." unique_id=1873961706 instance=ExtResource("2_7xno6")]
+[node name="Customers" parent="." unique_id=1742049152 instance=ExtResource("5_lnqlt")]
+position = Vector2(544, 352)
+
+[node name="Countertops" parent="." unique_id=1873961706 instance=ExtResource("2_7xno6")]
 position = Vector2(576, 440)
 
-[node name="Node" type="Node2D" parent="." unique_id=1394078180]
+[node name="Items" type="Node2D" parent="." unique_id=1394078180]
 z_index = 10
 position = Vector2(896, 432)
 
@@ -35,7 +43,11 @@ scale = Vector2(3, 3)
 
 [node name="SpawnTimer" type="Timer" parent="." unique_id=862036133]
 
+[connection signal="order_done" from="." to="Customers" method="_on_game_order_done"]
 [connection signal="scan_successfully" from="." to="ScanHand" method="_on_game_scan_successfully"]
-[connection signal="update_item_list" from="." to="Countertop" method="_on_game_update_item_list"]
+[connection signal="update_item_list" from="." to="Countertops" method="_on_game_update_item_list"]
+[connection signal="customer_order" from="Customers" to="." method="_on_customers_customer_order"]
+[connection signal="confirm_area_entered" from="Countertops" to="." method="_on_countertops_confirm_area_entered"]
+[connection signal="confirm_area_exited" from="Countertops" to="." method="_on_countertops_confirm_area_exited"]
 [connection signal="timeout" from="ScanTimer" to="." method="_on_scan_timer_timeout"]
 [connection signal="timeout" from="SpawnTimer" to="." method="_on_spawn_timer_timeout"]

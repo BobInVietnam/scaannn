@@ -18,6 +18,9 @@ font = ExtResource("2_ko3t6")
 font = ExtResource("2_ko3t6")
 font_size = 22
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t2sw1"]
+size = Vector2(362, 402)
+
 [node name="Countertop" type="Node2D" unique_id=1873961706]
 script = ExtResource("1_dc8bt")
 
@@ -28,13 +31,20 @@ texture = SubResource("AtlasTexture_t2sw1")
 [node name="ItemScannedLabel" type="Label" parent="." unique_id=938676265]
 offset_left = -120.0
 offset_top = -240.0
-offset_bottom = -144.0
-text = "Bún bò huế huế huế 
-Alo
-Alo
-Alo aaaaaa aaa aaaâ aaa 
-Alo"
+offset_right = -24.0
+offset_bottom = -143.0
+text = "Xin chào"
 label_settings = SubResource("LabelSettings_57k3a")
+clip_text = true
+text_overrun_behavior = 1
+max_lines_visible = 5
+
+[node name="CountLabel" type="Label" parent="." unique_id=1206818763]
+offset_left = -16.0
+offset_top = -240.0
+offset_bottom = -143.0
+label_settings = SubResource("LabelSettings_57k3a")
+horizontal_alignment = 2
 clip_text = true
 text_overrun_behavior = 1
 max_lines_visible = 5
@@ -43,11 +53,8 @@ max_lines_visible = 5
 offset_left = 8.0
 offset_top = -240.0
 offset_right = 56.0
-offset_bottom = -144.0
-text = "100 Đ
-12345 Đ
-1000 Đ
-99999 Đ
+offset_bottom = -143.0
+text = "
 "
 label_settings = SubResource("LabelSettings_dc8bt")
 horizontal_alignment = 2
@@ -57,7 +64,17 @@ offset_left = -120.0
 offset_top = -136.0
 offset_right = 56.0
 offset_bottom = -112.0
-text = "T. cộng: 10000000 Đ "
+text = "T. cộng: 0 Đ"
 label_settings = SubResource("LabelSettings_t2sw1")
 clip_text = true
 text_overrun_behavior = 1
+
+[node name="ConfirmArea" type="Area2D" parent="." unique_id=432503492]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ConfirmArea" unique_id=300532480]
+position = Vector2(-365, 103)
+shape = SubResource("RectangleShape2D_t2sw1")
+
+[connection signal="area_entered" from="ConfirmArea" to="." method="_on_confirm_area_area_entered"]
+[connection signal="area_exited" from="ConfirmArea" to="." method="_on_confirm_area_area_exited"]

@@ -5,8 +5,6 @@ class_name GrabbingHand
 @onready var covering_hitbox: Area2D = $CoveringHitbox
 @onready var pickup_hitbox: Area2D = $PickUpHitbox
 
-signal obstruction(obstructed: bool)
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.

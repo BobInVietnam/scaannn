@@ -4,44 +4,53 @@ extends Node2D
 @onready var grab_hand:= $GrabHand
 @onready var scan_timer:= $ScanTimer
 @onready var spawn_timer:= $SpawnTimer
-@onready var item_list_node:= $Node
+@onready var item_list_node:= $Items
+@onready var customer_list_node:= $Customers
 
-@export var x_move_velocity: int = 30;
-@export var y_move_velocity: int = 15;
+@export var x_move_velocity: int = 10;
+@export var y_move_velocity: int = 5;
 @export var min_time_to_scan: float = 0.2;
 @export var max_time_to_scan: float = 0.6;
 @export var left_handed: bool = false;
 
-@export var item_category: Array[PackedScene]
+@export var item_category: Dictionary
 
 var left_hand : Node2D;
 var right_hand : Node2D;
 
+var current_customer: Customer = null
 var item_list : Array[Item] = []
 var picked_item : Item = null
+var total_earned : int = 0
 
-var scanned_item_list : Array[Item] = []
+var scanned_item_list : Dictionary = {} # String -> [count, price_tag]
+var confirmed_item_list : Array[Item] = []
 
 var obstructed = false;
 var scanning_barcode = false;
 var scan_success_pause = false;
 
 signal scan_successfully()
-signal update_item_list(scanned_item_list: Array[Item])
+signal update_item_list(scanned_item_list: Dictionary)
+signal not_enough_item
+signal lacking_scan
+signal excess_scan
+signal order_done
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	for item in item_category:
-		var new_item: Node2D = item.instantiate()
-		new_item.scale = Vector2(3, 3)
-		item_list_node.add_child(new_item)
-
-	for item in item_list_node.get_children():
-		if item is Item:
-			item_list.append(item)
-	item_list.reverse()
 	
-	spawn_timer.start(5)
+	#for item in item_category.keys():
+		#var new_item: Node2D = item_category[item].instantiate()
+		#new_item.scale = Vector2(3, 3)
+		#item_list_node.add_child(new_item)
+#
+	#for item in item_list_node.get_children():
+		#if item is Item:
+			#item_list.append(item)
+	#item_list.reverse()
+	
+	#spawn_timer.start(5)
 			
 	if left_handed :
 		left_hand = scan_hand
@@ -77,14 +86,9 @@ func _input(event):
 	if event.is_action_released("scan"):
 		scan_success_pause = false
 	if event.is_action_pressed("confirm_order"):
-		print("CLEARED ITEMS\n---------------")
-		for item in scanned_item_list:
-			item_list.erase(item)
-			print(item.to_string())
-			item.queue_free()
-		print("---------------")
+		_confirm_order()
+	if event.is_action_pressed("reset_order"):
 		scanned_item_list.clear()
-		update_item_list.emit(scanned_item_list)
 		
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -131,18 +135,79 @@ func _process(delta: float) -> void:
 			scan_timer.start(randf_range(min_time_to_scan, max_time_to_scan))
 	else:
 		scan_timer.stop()
+		
+func _confirm_order() -> void:
+	if current_customer == null:
+		return
+	# Check for confirmed item
+	var temp_dict : Dictionary = {}
+	for item in confirmed_item_list:
+		if temp_dict.has(item.item_name):
+			temp_dict[item.item_name] += 1
+		else:
+			temp_dict[item.item_name] = 1
+			
+	for category in current_customer.order.keys():
+		if !temp_dict.has(category) or temp_dict[category] <  current_customer.order[category]:
+			print("not enough item confirmed")
+			not_enough_item.emit()
+			return
+		if !scanned_item_list.has(category) or scanned_item_list[category][0] < current_customer.order[category]:
+			print("lacking scan for some items")
+			lacking_scan.emit()
+			return
+		if scanned_item_list[category][0] > current_customer.order[category]:
+			print("Too much scan for some items")
+			excess_scan.emit()
+			return
+	
+	# Success: clear things
+	print("CLEARED ITEMS\n---------------")
+	for item in confirmed_item_list:
+		item_list.erase(item)
+		print(item.to_string())
+		item.queue_free()
+	print("---------------")
+	scanned_item_list.clear()
+	update_item_list.emit(scanned_item_list)
+	order_done.emit()
+	
+func _spawn_item(name: String) -> void:
+	var new_item: Node2D = item_category[name].instantiate()
+	new_item.scale = Vector2(3, 3)
+	item_list_node.add_child(new_item)
+	item_list.push_front(new_item)
+	print("added new item ", new_item.to_string())
 
 func _on_scan_timer_timeout() -> void:
 	print("Scan done: item ", picked_item)
-	scanned_item_list.append(picked_item)
+	if !scanned_item_list.has(picked_item.item_name):
+		scanned_item_list[picked_item.item_name] = [1, picked_item.item_price]
+	else:
+		scanned_item_list[picked_item.item_name][0] += 1
 	scan_successfully.emit()
 	update_item_list.emit(scanned_item_list)
 	scan_timer.stop()
 	scan_success_pause = true
 
 func _on_spawn_timer_timeout() -> void:
-	var new_item: Node2D = item_category[randi_range(0, item_category.size() - 1)].instantiate()
-	new_item.scale = Vector2(3, 3)
-	item_list_node.add_child(new_item)
-	item_list.append(new_item)
-	print("added new item ", new_item.to_string())
+	var list = item_category.keys()
+	_spawn_item(list[randi_range(0, list.size() - 1)])
+
+func _on_countertops_confirm_area_entered(area: Area2D) -> void:
+	var item = area.get_parent()
+	confirmed_item_list.append(item)
+	print(item.to_string(), " is in confirmed area")
+
+func _on_countertops_confirm_area_exited(area: Area2D) -> void:
+	var item = area.get_parent()
+	confirmed_item_list.erase(item)
+	print(item.to_string(), " exited confirmed area")
+	
+func _on_customers_customer_order(customer: Customer) -> void:
+	current_customer = customer
+	if customer != null:
+		for item in customer.order.keys():
+			for i in range(customer.order[item]):
+				_spawn_item(item)
+				await get_tree().create_timer(0.5).timeout

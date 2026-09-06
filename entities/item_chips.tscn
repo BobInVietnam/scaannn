@@ -46,7 +46,6 @@ script = ExtResource("1_n1270")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1861384126]
 material = SubResource("ShaderMaterial_uir1o")
 sprite_frames = SubResource("SpriteFrames_t2sw1")
-animation = &"picked_up"
 
 [node name="ScanHitbox" type="Area2D" parent="." unique_id=1271103808]
 position = Vector2(-9, 21)
