@@ -12,7 +12,7 @@ customer_types = {
 [node name="SpawnTimer" type="Timer" parent="." unique_id=2112004957]
 
 [node name="CustomerSpawn" type="Marker2D" parent="." unique_id=1756733509]
-position = Vector2(768, 0)
+position = Vector2(896, 0)
 
 [node name="CustomerContainer" type="Node2D" parent="." unique_id=199748744]
 

@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://dyy1mrwvubk32"]
+
+[ext_resource type="Theme" uid="uid://d2eqori02v0j8" path="res://assets/basic_theme.tres" id="1_5wnpb"]
+[ext_resource type="Script" uid="uid://csv1we67n1mjo" path="res://hud/pause_menu.gd" id="1_efd0s"]
+[ext_resource type="Texture2D" uid="uid://lko8p7bkqa0v" path="res://assets/scaannn.png" id="1_q5ypu"]
+[ext_resource type="LabelSettings" uid="uid://c8wexlcoum4js" path="res://assets/basic_label_settings.tres" id="2_tlsn2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8jejn"]
+atlas = ExtResource("1_q5ypu")
+region = Rect2(1, 99, 9, 9)
+
+[node name="PauseMenu" type="Control" unique_id=972165924]
+layout_mode = 3
+anchors_preset = 0
+offset_transform_enabled = true
+script = ExtResource("1_efd0s")
+
+[node name="NinePatchRect" type="NinePatchRect" parent="." unique_id=897221881]
+custom_minimum_size = Vector2(104, 104)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -56.0
+offset_right = 60.0
+offset_bottom = 92.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_5wnpb")
+texture = SubResource("AtlasTexture_8jejn")
+region_rect = Rect2(0, 0, 9, 9)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
+
+[node name="HFlowContainer" type="VBoxContainer" parent="NinePatchRect" unique_id=1962674999]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -46.0
+offset_right = 46.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="NinePatchRect/HFlowContainer" unique_id=1535875105]
+layout_mode = 2
+text = "ĐANG TẠM DỪNG"
+label_settings = ExtResource("2_tlsn2")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="UnpauseButton" type="Button" parent="NinePatchRect/HFlowContainer" unique_id=1416101539]
+layout_mode = 2
+text = "Tiếp tục"
+
+[node name="QuitButton" type="Button" parent="NinePatchRect/HFlowContainer" unique_id=1155238622]
+layout_mode = 2
+text = "Thoát game"
+
+[connection signal="pressed" from="NinePatchRect/HFlowContainer/UnpauseButton" to="." method="_on_unpause_button_pressed"]

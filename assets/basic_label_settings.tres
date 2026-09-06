@@ -1,0 +1,7 @@
+[gd_resource type="LabelSettings" format=3 uid="uid://c8wexlcoum4js"]
+
+[ext_resource type="FontFile" uid="uid://has7uvkifb4v" path="res://assets/dearpix-2-01.ttf" id="1_mnc05"]
+
+[resource]
+font = ExtResource("1_mnc05")
+font_color = Color(0.051970966, 0.05197096, 0.05197095, 1)

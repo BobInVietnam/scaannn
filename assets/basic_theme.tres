@@ -1,0 +1,40 @@
+[gd_resource type="Theme" format=3 uid="uid://d2eqori02v0j8"]
+
+[ext_resource type="FontFile" uid="uid://has7uvkifb4v" path="res://assets/dearpix-2-01.ttf" id="1_tkgpn"]
+[ext_resource type="Texture2D" uid="uid://lko8p7bkqa0v" path="res://assets/scaannn.png" id="2_ulwmh"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tkgpn"]
+atlas = ExtResource("2_ulwmh")
+region = Rect2(11, 99, 6, 6)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ulwmh"]
+texture = SubResource("AtlasTexture_tkgpn")
+texture_margin_left = 2.0
+texture_margin_top = 2.0
+texture_margin_right = 2.0
+texture_margin_bottom = 2.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_so17t"]
+atlas = ExtResource("2_ulwmh")
+region = Rect2(11, 99, 5, 5)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yhsbv"]
+texture = SubResource("AtlasTexture_so17t")
+texture_margin_left = 2.0
+texture_margin_top = 2.0
+texture_margin_right = 2.0
+texture_margin_bottom = 2.0
+
+[resource]
+default_font = ExtResource("1_tkgpn")
+Button/colors/font_color = Color(0.17641908, 0.17641914, 0.1764189, 1)
+Button/colors/font_focus_color = Color(0.19076231, 0.19076234, 0.19076225, 1)
+Button/colors/font_hover_color = Color(0.32544062, 0.32544085, 0.32544157, 1)
+Button/colors/font_hover_pressed_color = Color(0.3854925, 0.38549247, 0.38549247, 1)
+Button/colors/font_pressed_color = Color(0.48962224, 0.48962224, 0.48962218, 1)
+Button/constants/h_separation = 4
+Button/font_sizes/font_size = 14
+Button/fonts/font = ExtResource("1_tkgpn")
+Button/styles/hover = null
+Button/styles/normal = SubResource("StyleBoxTexture_ulwmh")
+Button/styles/pressed = SubResource("StyleBoxTexture_yhsbv")

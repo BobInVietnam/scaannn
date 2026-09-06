@@ -1,5 +1,20 @@
 [gd_scene format=3 uid="uid://toq1m7w7c277"]
 
+[ext_resource type="Script" uid="uid://bf7tl4qubhcai" path="res://hud/gameplay_hud.gd" id="1_1mi3a"]
+[ext_resource type="Texture2D" uid="uid://lko8p7bkqa0v" path="res://assets/scaannn.png" id="1_7lfyk"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_osteh"]
+atlas = ExtResource("1_7lfyk")
+region = Rect2(15, 111, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1mi3a"]
+atlas = ExtResource("1_7lfyk")
+region = Rect2(48, 112, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_advwk"]
+atlas = ExtResource("1_7lfyk")
+region = Rect2(32, 112, 16, 16)
+
 [node name="GameplayHud" type="Control" unique_id=1684824000]
 layout_mode = 3
 anchors_preset = 15
@@ -7,8 +22,54 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_1mi3a")
 
 [node name="NinePatchRect" type="NinePatchRect" parent="." unique_id=1746967378]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="GridContainer" type="GridContainer" parent="." unique_id=1143524198]
+layout_mode = 0
+offset_left = 1008.0
+offset_top = 8.0
+offset_right = 1144.0
+offset_bottom = 88.0
+columns = 2
+
+[node name="CustomerCountIcon" type="TextureRect" parent="GridContainer" unique_id=1698304244]
+layout_mode = 2
+texture = SubResource("AtlasTexture_osteh")
+expand_mode = 5
+
+[node name="CustomerCount" type="Label" parent="GridContainer" unique_id=226183310]
+layout_mode = 2
+text = "X 0 đang chờ "
+
+[node name="Label" type="Label" parent="GridContainer" unique_id=1777579634]
+layout_mode = 2
+size_flags_stretch_ratio = 2.0
+text = "-----"
+
+[node name="Label2" type="Label" parent="GridContainer" unique_id=901317049]
+layout_mode = 2
+size_flags_stretch_ratio = 2.0
+text = "------------"
+
+[node name="OrderDoneIcon" type="TextureRect" parent="GridContainer" unique_id=1539413037]
+layout_mode = 2
+texture = SubResource("AtlasTexture_1mi3a")
+expand_mode = 5
+
+[node name="OrderDone" type="Label" parent="GridContainer" unique_id=1443698011]
+layout_mode = 2
+text = "Hoàn Thành : 0 "
+
+[node name="MoneyEarnedIcon" type="TextureRect" parent="GridContainer" unique_id=518265936]
+layout_mode = 2
+texture = SubResource("AtlasTexture_advwk")
+expand_mode = 5
+
+[node name="MoneyEarned" type="Label" parent="GridContainer" unique_id=81887996]
+layout_mode = 2
+text = "0 Đ"

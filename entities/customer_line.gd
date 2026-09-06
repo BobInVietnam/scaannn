@@ -1,8 +1,8 @@
 extends Node2D
 
-const MOVE_TIME = 6
-const MOVE_DELAY = 1
-const LERP_RATE = 1.0
+const MOVE_TIME = 5
+const SPAWN_DELAY = 10
+const MOVE_DELAY = 1.5
 const DISTANCE = 300
 
 @onready var customer_spawn : Marker2D = $CustomerSpawn
@@ -12,13 +12,14 @@ var empty = true
 @export var customer_types : Dictionary
 
 signal customer_order(customer: Customer)
+signal new_customer_in
 
 var assigned_x_list : Array = [] # Save from-to coord of customer for moving calculation
 var accumulated_t : float = 0.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	spawn_timer.start(5)
+	spawn_timer.start(SPAWN_DELAY)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -39,7 +40,7 @@ func _spawn_customer(type: String) -> void:
 	new_customer.position = customer_spawn.position
 	new_customer.scale = Vector2(3, 3)
 	self.customer_line.add_child(new_customer)
-	
+	new_customer_in.emit()
 	_load_customers_position()
 	move(new_customer, assigned_x_list.back(), MOVE_TIME)
 	if empty:
@@ -48,7 +49,7 @@ func _spawn_customer(type: String) -> void:
 
 func move_first_out() -> void:
 	var current_customer = customer_line.get_child(0)
-	move(current_customer, Vector2(-1000, 0), MOVE_TIME)
+	move(current_customer, Vector2(-1200, 0), MOVE_TIME)
 	await get_tree().create_timer(MOVE_TIME).timeout
 	print("Removing first")
 	assigned_x_list.pop_front()

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://d35ghuj1k8l57"]
 
-[ext_resource type="PackedScene" uid="uid://c8hocool3615t" path="res://scenes/scaannn_gameplay.tscn" id="1_80nbo"]
+[ext_resource type="PackedScene" uid="uid://c8hocool3615t" path="res://scenes/gameplay/scaannn_gameplay.tscn" id="1_80nbo"]
 
 [node name="Game" type="Node2D" unique_id=1023739764]
 

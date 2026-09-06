@@ -1,15 +1,18 @@
 [gd_scene format=3 uid="uid://c8hocool3615t"]
 
-[ext_resource type="Script" uid="uid://b52k1m5kc8mxd" path="res://scenes/scaannn_gameplay.gd" id="1_jirow"]
-[ext_resource type="PackedScene" uid="uid://ce3rchmh0ijoa" path="res://hud/countertop.tscn" id="2_7xno6"]
+[ext_resource type="Script" uid="uid://b52k1m5kc8mxd" path="res://scenes/gameplay/scaannn_gameplay.gd" id="1_jirow"]
 [ext_resource type="PackedScene" uid="uid://bj05krn4jv8mj" path="res://hands/scan_hand.tscn" id="2_kyrdu"]
 [ext_resource type="PackedScene" uid="uid://x15wry7uosu" path="res://hands/grab_hand.tscn" id="3_7xno6"]
 [ext_resource type="PackedScene" uid="uid://rukuvjujny3j" path="res://entities/item_bottle.tscn" id="3_ya46o"]
 [ext_resource type="PackedScene" uid="uid://k8k3ag17oofb" path="res://entities/item_book.tscn" id="4_e465i"]
 [ext_resource type="PackedScene" uid="uid://b54vom07obqgc" path="res://entities/item_chips.tscn" id="5_e465i"]
 [ext_resource type="PackedScene" uid="uid://80nasa5g6oex" path="res://entities/customer_line.tscn" id="5_lnqlt"]
+[ext_resource type="PackedScene" uid="uid://ce3rchmh0ijoa" path="res://scenes/gameplay/countertop.tscn" id="6_a2aep"]
+[ext_resource type="PackedScene" uid="uid://dyy1mrwvubk32" path="res://hud/pause_menu.tscn" id="9_0p2b4"]
+[ext_resource type="PackedScene" uid="uid://toq1m7w7c277" path="res://hud/gameplay_hud.tscn" id="9_selx3"]
 
 [node name="Game" type="Node2D" unique_id=277205528]
+process_mode = 1
 script = ExtResource("1_jirow")
 item_category = {
 "placeholder_book": ExtResource("4_e465i"),
@@ -20,34 +23,50 @@ item_category = {
 [node name="Background" type="Sprite2D" parent="." unique_id=1305722624]
 
 [node name="Customers" parent="." unique_id=1742049152 instance=ExtResource("5_lnqlt")]
-position = Vector2(544, 352)
+position = Vector2(664, 352)
+scale = Vector2(0.8, 0.8)
 
-[node name="Countertops" parent="." unique_id=1873961706 instance=ExtResource("2_7xno6")]
-position = Vector2(576, 440)
+[node name="Countertop" parent="." unique_id=1873961706 instance=ExtResource("6_a2aep")]
+position = Vector2(576, 456)
 
 [node name="Items" type="Node2D" parent="." unique_id=1394078180]
 z_index = 10
-position = Vector2(896, 432)
+position = Vector2(848, 448)
 
 [node name="GrabHand" parent="." unique_id=80531346 instance=ExtResource("3_7xno6")]
 z_index = 999
 position = Vector2(268, 439)
-scale = Vector2(3, 3)
+scale = Vector2(2.4, 2.4)
 
 [node name="ScanHand" parent="." unique_id=757804610 instance=ExtResource("2_kyrdu")]
 z_index = 1000
 position = Vector2(1032, 440.00003)
-scale = Vector2(3, 3)
+scale = Vector2(2.4, 2.4)
 
 [node name="ScanTimer" type="Timer" parent="." unique_id=461584085]
 
 [node name="SpawnTimer" type="Timer" parent="." unique_id=862036133]
 
+[node name="GameplayHud" parent="." unique_id=1684824000 instance=ExtResource("9_selx3")]
+
+[node name="PauseMenu" parent="." unique_id=972165924 instance=ExtResource("9_0p2b4")]
+process_mode = 2
+visible = false
+z_index = 4096
+offset_left = 600.0
+offset_top = 256.0
+offset_right = 600.0
+offset_bottom = 256.0
+scale = Vector2(2, 2)
+
 [connection signal="order_done" from="." to="Customers" method="_on_game_order_done"]
 [connection signal="scan_successfully" from="." to="ScanHand" method="_on_game_scan_successfully"]
-[connection signal="update_item_list" from="." to="Countertops" method="_on_game_update_item_list"]
+[connection signal="update_item_list" from="." to="Countertop" method="_on_game_update_item_list"]
+[connection signal="update_stats" from="." to="GameplayHud" method="_on_game_update_stats"]
 [connection signal="customer_order" from="Customers" to="." method="_on_customers_customer_order"]
-[connection signal="confirm_area_entered" from="Countertops" to="." method="_on_countertops_confirm_area_entered"]
-[connection signal="confirm_area_exited" from="Countertops" to="." method="_on_countertops_confirm_area_exited"]
+[connection signal="new_customer_in" from="Customers" to="." method="_on_customers_new_customer_in"]
+[connection signal="confirm_area_entered" from="Countertop" to="." method="_on_countertop_confirm_area_entered"]
+[connection signal="confirm_area_exited" from="Countertop" to="." method="_on_countertop_confirm_area_exited"]
 [connection signal="timeout" from="ScanTimer" to="." method="_on_scan_timer_timeout"]
 [connection signal="timeout" from="SpawnTimer" to="." method="_on_spawn_timer_timeout"]
+[connection signal="unpause" from="PauseMenu" to="." method="_on_pause_menu_unpause"]

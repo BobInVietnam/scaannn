@@ -6,6 +6,7 @@ extends Node2D
 @onready var spawn_timer:= $SpawnTimer
 @onready var item_list_node:= $Items
 @onready var customer_list_node:= $Customers
+@onready var pause_menu:= $PauseMenu
 
 @export var x_move_velocity: int = 10;
 @export var y_move_velocity: int = 5;
@@ -21,6 +22,8 @@ var right_hand : Node2D;
 var current_customer: Customer = null
 var item_list : Array[Item] = []
 var picked_item : Item = null
+var customer_count : int = 0
+var order_completed : int = 0
 var total_earned : int = 0
 
 var scanned_item_list : Dictionary = {} # String -> [count, price_tag]
@@ -36,6 +39,7 @@ signal not_enough_item
 signal lacking_scan
 signal excess_scan
 signal order_done
+signal update_stats(customer_count: int, order_completed: int, total_earned: int)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -89,6 +93,10 @@ func _input(event):
 		_confirm_order()
 	if event.is_action_pressed("reset_order"):
 		scanned_item_list.clear()
+		update_item_list.emit(scanned_item_list)
+	if event.is_action_pressed("pause"):
+		get_tree().paused = true
+		pause_menu.visible = true
 		
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -164,13 +172,17 @@ func _confirm_order() -> void:
 	# Success: clear things
 	print("CLEARED ITEMS\n---------------")
 	for item in confirmed_item_list:
+		total_earned += item.item_price
 		item_list.erase(item)
 		print(item.to_string())
 		item.queue_free()
 	print("---------------")
+	customer_count -= 1
+	order_completed += 1
 	scanned_item_list.clear()
 	update_item_list.emit(scanned_item_list)
 	order_done.emit()
+	update_stats.emit(customer_count, order_completed, total_earned)
 	
 func _spawn_item(name: String) -> void:
 	var new_item: Node2D = item_category[name].instantiate()
@@ -194,12 +206,12 @@ func _on_spawn_timer_timeout() -> void:
 	var list = item_category.keys()
 	_spawn_item(list[randi_range(0, list.size() - 1)])
 
-func _on_countertops_confirm_area_entered(area: Area2D) -> void:
+func _on_countertop_confirm_area_entered(area: Area2D) -> void:
 	var item = area.get_parent()
 	confirmed_item_list.append(item)
 	print(item.to_string(), " is in confirmed area")
 
-func _on_countertops_confirm_area_exited(area: Area2D) -> void:
+func _on_countertop_confirm_area_exited(area: Area2D) -> void:
 	var item = area.get_parent()
 	confirmed_item_list.erase(item)
 	print(item.to_string(), " exited confirmed area")
@@ -210,4 +222,14 @@ func _on_customers_customer_order(customer: Customer) -> void:
 		for item in customer.order.keys():
 			for i in range(customer.order[item]):
 				_spawn_item(item)
-				await get_tree().create_timer(0.5).timeout
+				await get_tree().create_timer(0.5, false).timeout
+
+
+func _on_pause_menu_unpause() -> void:
+	get_tree().paused = false
+	pause_menu.visible = false
+
+
+func _on_customers_new_customer_in() -> void:
+	customer_count += 1
+	update_stats.emit(customer_count, order_completed, total_earned)

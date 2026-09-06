@@ -1,28 +1,28 @@
 [gd_scene format=3 uid="uid://ce3rchmh0ijoa"]
 
-[ext_resource type="Script" uid="uid://cygwupqel27kb" path="res://hud/countertop.gd" id="1_dc8bt"]
-[ext_resource type="Texture2D" uid="uid://lko8p7bkqa0v" path="res://assets/scaannn.png" id="1_mdgc1"]
-[ext_resource type="FontFile" uid="uid://has7uvkifb4v" path="res://assets/dearpix-2-01.ttf" id="2_ko3t6"]
+[ext_resource type="Script" uid="uid://cygwupqel27kb" path="res://scenes/gameplay/countertop.gd" id="1_6bxr8"]
+[ext_resource type="Texture2D" uid="uid://lko8p7bkqa0v" path="res://assets/scaannn.png" id="2_npyp2"]
+[ext_resource type="FontFile" uid="uid://has7uvkifb4v" path="res://assets/dearpix-2-01.ttf" id="3_ruf0a"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_t2sw1"]
-atlas = ExtResource("1_mdgc1")
+atlas = ExtResource("2_npyp2")
 region = Rect2(0, 331, 323, 182)
 
 [sub_resource type="LabelSettings" id="LabelSettings_57k3a"]
-font = ExtResource("2_ko3t6")
+font = ExtResource("3_ruf0a")
 
 [sub_resource type="LabelSettings" id="LabelSettings_dc8bt"]
-font = ExtResource("2_ko3t6")
+font = ExtResource("3_ruf0a")
 
 [sub_resource type="LabelSettings" id="LabelSettings_t2sw1"]
-font = ExtResource("2_ko3t6")
+font = ExtResource("3_ruf0a")
 font_size = 22
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t2sw1"]
 size = Vector2(362, 402)
 
 [node name="Countertop" type="Node2D" unique_id=1873961706]
-script = ExtResource("1_dc8bt")
+script = ExtResource("1_6bxr8")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=617302813]
 scale = Vector2(3.4, 3.4)
